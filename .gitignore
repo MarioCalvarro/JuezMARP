@@ -35,3 +35,7 @@
 *.exe
 *.out
 *.app
+
+# VSCode
+launch.json
+tasks.json
