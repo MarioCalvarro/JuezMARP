@@ -22,7 +22,8 @@ bool resuelveCaso()
     size_t el;
 
     for (size_t i = 0; i < N; ++i){
-        std::cin >> el; conjunto.insert(el); 
+        std::cin >> el; 
+        conjunto.insert(el); 
     }
 
     size_t M, consulta;

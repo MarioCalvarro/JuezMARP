@@ -34,9 +34,9 @@ protected:
       T elem;
       Link iz, dr;
       int altura;
-      int hijosIzq;
+      int tam_i;
       TreeNode(T const& e, Link i = nullptr, Link d = nullptr,
-               int alt = 1, int hijosIzq = 0) : elem(e), iz(i), dr(d), altura(alt), hijosIzq(hijosIzq) {}
+               int alt = 1, int tam_i = 1) : elem(e), iz(i), dr(d), altura(alt), tam_i(tam_i) {}
    };
    
    // puntero a la raíz de la estructura jerárquica de nodos
@@ -92,19 +92,22 @@ public:
    }
 
    T const& kesimo(int k) const {
-      return raiz->hijosIzq;
-      //if (k < raiz->hijosIzq) {
-      //  return raiz->iz.kesimo(k);
-      //}
-      //else if (k > raiz->hijosIzq) {
-      //  return raiz->der.kesimo(k - raiz->hijosIzq);
-      //}
-      //else {
-      //  return raiz->elem;
-      //}
+       return kesimo(k, raiz);
    }
       
 protected:
+
+   T const& kesimo(int k, const Link a) const {
+      if (k > nelems)
+        throw std::domain_error("??");
+
+      if (k < a->tam_i)
+        return kesimo(k, a->iz);
+      else if (k > a->tam_i)
+        return kesimo(k - a->tam_i, a->dr);
+      else 
+        return a->elem;
+   }
    
    void copia(Set const& other) {
       raiz = copia(other.raiz);
@@ -114,7 +117,7 @@ protected:
    
    static Link copia(Link a) {
       if (a == nullptr) return nullptr;
-      else return new TreeNode(a->elem, copia(a->iz), copia(a->dr), a->altura, a->hijosIzq);
+      else return new TreeNode(a->elem, copia(a->iz), copia(a->dr), a->altura, a->tam_i);
    }
    
    static void libera(Link a) {
@@ -146,10 +149,9 @@ protected:
          a = new TreeNode(e);
          ++nelems;
          crece = true;
-      } else if (menor(e, a->elem)) {
-         a->hijosIzq++;
+      } else if (menor(e, a->elem)) {         
          crece = inserta(e, a->iz);
-         if (crece) reequilibraDer(a);
+         if (crece) a->tam_i++; reequilibraDer(a);
       } else if (menor(a->elem, e)) {
          crece = inserta(e, a->dr);
          if (crece) reequilibraIzq(a);
@@ -166,8 +168,8 @@ protected:
    void rotaDer(Link & r2) {
       Link r1 = r2->iz;
       r2->iz = r1->dr;
+      r2->tam_i = (r2->iz == nullptr? 1 : r2->iz->tam_i + 2);
       r1->dr = r2;
-      --(r2->hijosIzq);
       r2->altura = std::max(altura(r2->iz), altura(r2->dr)) + 1;
       r1->altura = std::max(altura(r1->iz), altura(r1->dr)) + 1;
       r2 = r1;
@@ -177,7 +179,7 @@ protected:
       Link r2 = r1->dr;
       r1->dr = r2->iz;
       r2->iz = r1;
-      ++(r2->hijosIzq);
+      ++(r2->tam_i);
       r1->altura = std::max(altura(r1->iz), altura(r1->dr)) + 1;
       r2->altura = std::max(altura(r2->iz), altura(r2->dr)) + 1;
       r1 = r2;
