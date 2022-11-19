@@ -1,7 +1,7 @@
 // DG, Mario Calvarro Marines
 //
 // Solución:
-//
+// Explicación en los lugares donde se ha modificado código de TreeSet_AVL
 
 #include <iostream>
 #include <fstream>

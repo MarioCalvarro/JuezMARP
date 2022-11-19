@@ -91,6 +91,7 @@ public:
       return borra(e, raiz);
    }
 
+   //La implementación es recursiva
    T const& kesimo(int k) const {
        return kesimo(k, raiz);
    }
@@ -98,13 +99,14 @@ public:
 protected:
 
    T const& kesimo(int k, const Link a) const {
+      //Si hay algún elemento repetido
       if (k > nelems)
         throw std::domain_error("??");
 
       if (k < a->tam_i)
         return kesimo(k, a->iz);
       else if (k > a->tam_i)
-        return kesimo(k - a->tam_i, a->dr);
+        return kesimo(k - a->tam_i, a->dr);  //Empezamos de 0 eliminando la posibilidad de la raíz y su árbol izquierdo
       else 
         return a->elem;
    }
@@ -151,7 +153,7 @@ protected:
          crece = true;
       } else if (menor(e, a->elem)) {         
          crece = inserta(e, a->iz);
-         if (crece) a->tam_i++; reequilibraDer(a);
+         if (crece) a->tam_i++; reequilibraDer(a);  
       } else if (menor(a->elem, e)) {
          crece = inserta(e, a->dr);
          if (crece) reequilibraIzq(a);
@@ -167,8 +169,9 @@ protected:
    
    void rotaDer(Link & r2) {
       Link r1 = r2->iz;
+      //El tamaño será el que tenía antes menos los que se van 
+      r2->tam_i = (r2->tam_i - r2->iz->tam_i);  
       r2->iz = r1->dr;
-      r2->tam_i = (r2->iz == nullptr? 1 : r2->iz->tam_i + 2);
       r1->dr = r2;
       r2->altura = std::max(altura(r2->iz), altura(r2->dr)) + 1;
       r1->altura = std::max(altura(r1->iz), altura(r1->dr)) + 1;
@@ -179,7 +182,7 @@ protected:
       Link r2 = r1->dr;
       r1->dr = r2->iz;
       r2->iz = r1;
-      ++(r2->tam_i);
+      r2->tam_i += r1->tam_i; //r1 pasa a ser el hijo izquierdo
       r1->altura = std::max(altura(r1->iz), altura(r1->dr)) + 1;
       r2->altura = std::max(altura(r2->iz), altura(r2->dr)) + 1;
       r1 = r2;
