@@ -1,7 +1,15 @@
 // DG, Mario Calvarro Marines
 //
 // Solución:
-//
+// Ordenamos la lista dando prioridad 
+// a aquellos conjuntos de un instrumento
+// en los que la división entre nº de músicos 
+// y nº de atriles en máxima.
+// Con esto vamos dando atriles al primer 
+// elemento de la cola hasta que no queden más 
+// atriles.
+// Si la división no es exacta, debemos sumar 
+// 1 para tener el máximo.
 
 #include <functional>
 #include <iostream>
@@ -16,10 +24,17 @@ struct comp_atriles
 {
     bool operator () (const tDato& lhs, const tDato& rhs)
     {
-        return lhs.first / lhs.second > rhs.first / rhs.second;
+        size_t lOp = lhs.first / lhs.second;
+        size_t rOp = rhs.first / rhs.second;
+        lOp += (lhs.first % lhs.second == 0)? 0 : 1;
+        rOp += (rhs.first % rhs.second == 0)? 0 : 1;
+
+        return lOp > rOp;
     }
 };
 
+//Se ejecuta el bucle p veces con operaciones de coste log(n), n = nº de tipos de 
+//instrumento: O(p log(n))
 size_t resolver(PriorityQueue<tDato, comp_atriles> musicos, size_t& p) 
 {
     tDato aux;
@@ -32,7 +47,10 @@ size_t resolver(PriorityQueue<tDato, comp_atriles> musicos, size_t& p)
         --p;
     }
 
-    return musicos.top().first / musicos.top().second;
+    size_t sol = musicos.top().first / musicos.top().second;
+    sol += (musicos.top().first % musicos.top().second == 0)? 0 : 1;
+
+    return sol;
 }
 
 bool resuelveCaso() 
