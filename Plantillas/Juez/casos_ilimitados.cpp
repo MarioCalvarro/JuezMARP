@@ -1,7 +1,4 @@
 // DG, Mario Calvarro Marines
-//
-// Solución:
-//
 
 #include <iostream>
 #include <fstream>
