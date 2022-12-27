@@ -8,9 +8,21 @@
 
 std::pair<bool, size_t> resolver(const Digrafo &gr) 
 {
-    std::vector<size_t> posibles_sumideros;
-    for ()
-    return {false, 1};
+    std::vector<size_t> aristas_entrada (gr.V());
+
+    for (size_t i = 0; i < gr.V(); ++i) 
+    {
+        for(auto ite : gr.ady(i)) 
+            ++aristas_entrada[ite];
+    }
+
+    for (size_t i = 0; i < aristas_entrada.size(); ++i)
+    {
+        if (gr.ady(i).size() == 0 && aristas_entrada[i] == (gr.V() - 1))
+            return {true, i};
+    }
+
+    return {false, 0};
 }
 
 bool resuelveCaso() 
@@ -25,13 +37,9 @@ bool resuelveCaso()
 
     //Escribir
     if (posible) 
-    {
-        std::cout << res << '\n';
-    }
+        std::cout << "SI " << res << '\n';
     else 
-    {
         std::cout << "NO\n";
-    }
 
     return true;
 }
